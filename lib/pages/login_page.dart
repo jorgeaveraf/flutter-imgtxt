@@ -29,15 +29,8 @@ const String LOGIN_MUTATION = """
     \$username: String!
     \$password: String!
   ) {
-    login(
-      username: \$username,
-      password: \$password
-    ) {
-      user {
-        id
-        username
-        email
-      }
+    tokenAuth(username: \$username, password: \$password) {
+      
     }
   }
 """;
