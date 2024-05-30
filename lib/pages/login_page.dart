@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
 import 'ine_list_page.dart';
 import '../services/graphql_service.dart';
@@ -16,7 +15,11 @@ const String SIGNUP_MUTATION = """
       username: \$username,
       password: \$password
     ) {
-      token
+      user {
+        id
+        username
+        email
+      }
     }
   }
 """;
@@ -27,7 +30,7 @@ const String LOGIN_MUTATION = """
     \$password: String!
   ) {
     tokenAuth(username: \$username, password: \$password) {
-      token
+      
     }
   }
 """;
@@ -64,20 +67,15 @@ class _LoginPageState extends State<LoginPage> {
     final QueryResult result = await GraphQLService.client.mutate(options);
 
     if (result.hasException) {
-  print(result.exception.toString());
-  // Manejar errores
-} else if (result.data != null) {
-  final token = _isLogin
-      ? result.data!['tokenAuth']['token']
-      : result.data!['createUser']['token'];
-  await GraphQLService.setAuthToken(token);
-  Navigator.of(context).pushReplacement(
-    MaterialPageRoute(builder: (context) => IneListPage()),
-  );
-} else {
-  // Manejar el caso en el que result.data es nulo
-}
-
+      print(result.exception.toString());
+      // Manejar errores
+    } else if (result.data != null) {
+      // Aquí puedes agregar el código para manejar la respuesta exitosa del login o registro
+      // Por ejemplo, puedes navegar a la página siguiente
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => IneListPage()),
+      );
+    }
   }
 
   @override
